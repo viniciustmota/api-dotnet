@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api.Domain", "Api.Domain", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Api.Domain\Domain.csproj", "{D4F89431-2EAB-4C00-B5C5-6A280F15395D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api.CrossCutting", "Api.CrossCutting", "{F22AA972-3027-63FD-3903-780424A49BCB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossCutting", "Api.CrossCutting\CrossCutting.csproj", "{5C4C23F3-F05D-4B83-A633-CED77944AA5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,18 @@ Global
 		{D4F89431-2EAB-4C00-B5C5-6A280F15395D}.Release|x64.Build.0 = Release|Any CPU
 		{D4F89431-2EAB-4C00-B5C5-6A280F15395D}.Release|x86.ActiveCfg = Release|Any CPU
 		{D4F89431-2EAB-4C00-B5C5-6A280F15395D}.Release|x86.Build.0 = Release|Any CPU
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C}.Debug|x64.Build.0 = Debug|Any CPU
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C}.Debug|x86.Build.0 = Debug|Any CPU
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C}.Release|x64.ActiveCfg = Release|Any CPU
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C}.Release|x64.Build.0 = Release|Any CPU
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,5 +68,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{61870A82-65BB-443B-A47F-A695BE8A90C6} = {7C8C418E-DA64-826B-FC44-19C8E6950DF3}
 		{D4F89431-2EAB-4C00-B5C5-6A280F15395D} = {B074FEE8-4E10-0031-71FF-49F4345BFDDF}
+		{5C4C23F3-F05D-4B83-A633-CED77944AA5C} = {F22AA972-3027-63FD-3903-780424A49BCB}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,114 @@
+# Diretórios e arquivos de build do .NET
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+*.dll
+*.exe
+*.pdb
+*.suo
+*.user
+*.userprefs
+*.log
+*.vspscc
+*.vssscc
+*.builds
+*.opendb
+*.cache
+
+# Pacotes e metadados do NuGet
+packages/
+*.nupkg
+.nuget/
+# Excluir a pasta de cache global do NuGet se por algum motivo for criada localmente
+.nuget/NuGetScratch/
+
+# Artefatos de publicação/deploy
+[Pp]ublish/
+[Aa]pp_Data/
+[Ww]wwroot/
+[Ww]eb.config
+[Ww]eb.Debug.config
+[Ww]eb.Release.config
+
+# Arquivos e diretórios de teste
+TestResults/
+*.trx
+*.coverage
+*.runsettings
+
+# Arquivos do Visual Studio Code (VS Code)
+.vscode/
+# Incluir apenas arquivos de configuração compartilhados da equipe (opcional)
+# Se você quiser compartilhar configurações de depuração, tarefas ou extensões recomendadas,
+# remova a exclamação (!) da linha correspondente.
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+# Excluir arquivos de workspace específicos do usuário ou temporários do VS Code
+*.code-workspace
+*.vscode/*.bak
+*.vscode/*.tmp
+*.vscode/User/
+
+# Arquivos do ReSharper
+/_ReSharper.*/
+*.ReSharper.*
+*.dotCover
+
+# Arquivos de usuário e IDEs
+*.bak
+*.orig
+*.swp
+*.tmp
+*~
+UpgradeLog.XML
+_UpgradeReport_Files/
+*.ncruncover
+*.ncrunchsolution
+
+# Arquivos de configurações locais e sensíveis (adicionar conforme necessário)
+# Se você tiver arquivos de configuração com dados sensíveis, como strings de conexão
+# ou chaves de API para ambientes de desenvolvimento, adicione-os aqui.
+# Exemplo:
+# appsettings.Development.json
+# ConnectionStrings.config
+
+# Arquivos de log e bancos de dados locais
+*.log
+*.sqlite
+# Se você usa um banco de dados local para desenvolvimento que NÃO deve ser versionado
+# Exemplo: database.db
+
+# Arquivos e diretórios de pacotes de terceiros (se não gerenciados pelo NuGet)
+node_modules/
+bower_components/
+jspm_packages/
+
+# Arquivos de sistema operacional
+.DS_Store
+ehthumbs.db
+Icon?
+Thumbs.db
+Desktop.ini
+
+# Arquivos de Docker
+Dockerfile.orig
+docker-compose*.orig
+docker-compose*.override.yml
+
+# Arquivos de pacotes comprimidos (evitar versionar binários grandes)
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Arquivos de metadados do Git
+.gitattributes
+.gitkeep
+.fake

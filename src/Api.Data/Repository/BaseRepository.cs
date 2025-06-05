@@ -26,10 +26,11 @@ namespace Api.Data.Repository
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch (Exception e)
+            catch
             {
-                throw e;
+                throw;
             }
+
         }
 
         public async Task<T> InsertAsync(T item)
@@ -46,12 +47,17 @@ namespace Api.Data.Repository
 
                 await _context.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch
             {
-                throw e;
+                throw;
             }
 
             return item;
+        }
+
+        public async Task<bool> ExistAsync(Guid id)
+        {
+            return await _dataset.AnyAsync(p => p.Id.Equals(id));
         }
 
         public Task<T> SelectAsync(Guid id)
@@ -70,7 +76,7 @@ namespace Api.Data.Repository
             {
                 var result = await _dataset.SingleOrDefaultAsync(p => p.Id.Equals(item.Id));
                 if (result == null)
-                    return null;
+                    throw new KeyNotFoundException($"Item with ID {item.Id} not found for update."); // Ou outra exceção mais apropriada
 
                 item.UpdateAt = DateTime.UtcNow;
                 item.CreateAt = result.CreateAt;
@@ -78,9 +84,9 @@ namespace Api.Data.Repository
                 _context.Entry(result).CurrentValues.SetValues(item);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch
             {
-                throw e;
+                throw;
             }
 
             return item;

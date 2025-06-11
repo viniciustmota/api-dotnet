@@ -12,9 +12,9 @@ namespace Api.Service.Services
             _repository = repository;
         }
 
-        public async Task<object> FindByLogin(UserEntity user)
+        public async Task<object?> FindByLogin(UserEntity user)
         {
-            var baseUser = new UserEntity();
+            UserEntity? baseUser = null;
             if (user != null && !string.IsNullOrWhiteSpace(user.Email))
             {
                 baseUser = await _repository.FindByLogin(user.Email);
@@ -27,7 +27,8 @@ namespace Api.Service.Services
                     return baseUser;
                 }
             }
-            else {
+            else
+            {
                 return null;
             }
         }

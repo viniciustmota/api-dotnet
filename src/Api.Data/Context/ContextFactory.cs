@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace Api.Data.Context
 {
@@ -7,11 +8,25 @@ namespace Api.Data.Context
     {
         public MyContext CreateDbContext(string[] args)
         {
-            //var connectionString = "Server=172.23.0.1;Port=3306;Database=dbAPI;Uid=viniciustmota;Pwd=1234;";
-            var connectionString = "Server=172.23.0.1\\SQLEXPRESS2022;Initial Catalog=dbapi;MultipleActiveResultSets=true;User ID=sa;Password=DevSysth2025@";
+            var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+            .Build();
+
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
             var optionsBuilder = new DbContextOptionsBuilder<MyContext>();
-            //optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-            optionsBuilder.UseSqlServer(connectionString);
+            if (configuration.GetConnectionString("DATABASE").ToLower() == "SQLSERVER".ToLower())
+            {
+                optionsBuilder.UseSqlServer(connectionString);
+            }
+            else
+            {
+                optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));    
+            }
+            
+            
             return new MyContext(optionsBuilder.Options);
         }
     }

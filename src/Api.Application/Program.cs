@@ -1,24 +1,60 @@
 using Api.CrossCutting.DependencyInjection;
 using Api.CrossCutting.Mappings;
+using Api.Data.Context;
 using Api.Domain.Security;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models; 
+
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// --- SELEÇÃO DINÂMICA DA CONNECTION STRING E PROVEDOR ---
+string? selectedDatabase = builder.Configuration.GetConnectionString("DATABASE"); 
+string? finalConnectionString = "";
+
+Action<DbContextOptionsBuilder> dbContextOptionsAction = null; 
+
+if (string.IsNullOrEmpty(selectedDatabase))
+{
+    throw new InvalidOperationException("A flag 'DATABASE' não foi configurada na seção ConnectionStrings do appsettings.json. Deve ser 'MYSQL' ou 'SQLSERVER'.");
+}
+
+switch (selectedDatabase.ToUpper())
+{
+    case "MYSQL":
+        finalConnectionString = builder.Configuration.GetConnectionString("MYSQL_CONNECTION");
+        if (string.IsNullOrEmpty(finalConnectionString))
+        {
+            throw new InvalidOperationException("A string de conexão 'MYSQL_CONNECTION' não foi encontrada no appsettings.json.");
+        }
+        dbContextOptionsAction = options => options.UseMySql(finalConnectionString, ServerVersion.AutoDetect(finalConnectionString));
+        break;
+    case "SQLSERVER":
+        finalConnectionString = builder.Configuration.GetConnectionString("SQLSERVER_CONNECTION");
+        if (string.IsNullOrEmpty(finalConnectionString))
+        {
+            throw new InvalidOperationException("A string de conexão 'SQLSERVER_CONNECTION' não foi encontrada no appsettings.json.");
+        }
+        dbContextOptionsAction = options => options.UseSqlServer(finalConnectionString);
+        break;
+    default:
+        throw new InvalidOperationException($"Banco de dados '{selectedDatabase}' não suportado. Use 'MYSQL' ou 'SQLSERVER'.");
+}
+
+if (string.IsNullOrEmpty(finalConnectionString))
+{
+    throw new InvalidOperationException("A string de conexão final está vazia após a seleção do banco de dados.");
+}
+
+builder.Services.AddDbContext<MyContext>(dbContextOptionsAction);
 
 var signingConfigurations = new SigningConfigurations();
 builder.Services.AddSingleton(signingConfigurations);
 
-var tokenConfigurations = new TokenConfigurations();
-new ConfigureFromConfigurationOptions<TokenConfigurations>(builder.Configuration.GetSection("TokenConfigurations"))
-    .Configure(tokenConfigurations);
-
+var tokenConfigurations = builder.Configuration.GetSection("TokenConfigurations").Get<TokenConfigurations>();
 if (tokenConfigurations == null)
 {
     throw new InvalidOperationException("A seção 'TokenConfigurations' não foi encontrada ou não pôde ser mapeada para a classe TokenConfigurations. Verifique appsettings.json e a classe TokenConfigurations.");
@@ -48,9 +84,7 @@ builder.Services.AddAuthorization(auth =>
 });
 
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-builder.Services.AddControllers(); // Adiciona suporte a controllers MVC e Web
+builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -93,11 +127,17 @@ builder.Services.AddSwaggerGen(c =>
             }, new List<string>()
         }
     });
-    
 });
-ConfigureService.ConfigureDependenciesService(builder.Services); // Esta deve registrar ILoginService -> LoginService
-ConfigureRepository.ConfigureDependenciesRepository(builder.Services, connectionString);
 
+ConfigureService.ConfigureDependenciesService(builder.Services);
+
+// !!! IMPORTANTE: O ConfigureRepository.ConfigureDependenciesRepository NÃO DEVE CHAMAR AddDbContext !!!
+// Ele deve APENAS registrar os repositórios (interfaces e implementações).
+// Se ele contém AddDbContext, remova de lá.
+ConfigureRepository.ConfigureDependenciesRepository(builder.Services, finalConnectionString);
+
+
+// AutoMapper
 var config = new AutoMapper.MapperConfiguration(cfg =>
 {
     cfg.AddProfile(new DtoToModelProfile());
@@ -108,12 +148,57 @@ var config = new AutoMapper.MapperConfiguration(cfg =>
 IMapper mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
+
 var app = builder.Build();
+
+// SEEDING DE DADOS E APLICAÇÃO DE MIGRAÇÕES NA INICIALIZAÇÃO
+// CORREÇÃO AQUI: app.Services.GetRequiredService<IServiceScopeFactory>()
+if (builder.Configuration.GetValue<bool>("ApplyMigrations"))
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("Flag 'ApplyMigrations' é TRUE. Tentando aplicar migrações do banco de dados...");
+
+    using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+    {
+        var context = serviceScope.ServiceProvider.GetService<MyContext>();
+        if (context != null)
+        {
+            logger.LogInformation("MyContext resolvido. Aplicando migrações...");
+            context.Database.Migrate();
+            logger.LogInformation("Migrações aplicadas com sucesso!");
+            
+            // Exemplo de seeding de usuário ADMINISTRADOR fixo após migrações, se a tabela estiver vazia
+            if (!context.Users.Any())
+            {
+                logger.LogInformation("Semeando usuário administrador...");
+                context.Users.Add(new Api.Domain.Entities.UserEntity
+                {
+                    Id = new Guid("c3f0b2a1-e4d5-4f67-890a-1234567890ab"), // Use um GUID estático
+                    Name = "Administrador",
+                    Email = "mfrinfo@mail.com",
+                    CreateAt = new DateTime(2025, 6, 13, 10, 0, 0, DateTimeKind.Utc),
+                    UpdateAt = new DateTime(2025, 6, 13, 10, 0, 0, DateTimeKind.Utc)
+                });
+                context.SaveChanges();
+                logger.LogInformation("Usuário administrador semeado.");
+            }
+        }
+        else
+        {
+            logger.LogError("ERRO: MyContext não pôde ser resolvido para a migração.");
+        }
+    }
+}
+else
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("Flag 'ApplyMigrations' é FALSE. Migrações automáticas desabilitadas.");
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    // app.MapOpenApi();
 }
 app.UseSwagger();
 app.UseSwaggerUI(c =>

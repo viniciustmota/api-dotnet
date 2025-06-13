@@ -20,6 +20,21 @@ namespace Api.Data.Context
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserEntity>(new UserMap().Configure);
+
+            modelBuilder.Entity<UserEntity>().HasData(
+                new UserEntity
+                {
+                    Id = new Guid("c3f0b2a1-e4d5-4f67-890a-1234567890ab"), // <-- GUID FIXO!
+
+                    Name = "Administrador",
+                    Email = "mfrinfo@mail.com",
+
+                    // Use um valor de data e hora estático e fixo.
+                    // É recomendado usar DateTimeKind.Utc para consistência.
+                    CreateAt = new DateTime(2025, 6, 13, 10, 0, 0, DateTimeKind.Utc), // <-- DATA FIXA!
+                    UpdateAt = new DateTime(2025, 6, 13, 10, 0, 0, DateTimeKind.Utc), // <-- DATA FIXA! (Ou null se permitido)
+                }
+            );
         }
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20250605135223_UserMigration")]
+    [Migration("20250613134237_UserMigration")]
     partial class UserMigration
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -35,7 +35,6 @@ namespace Data.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -53,6 +52,16 @@ namespace Data.Migrations
                         .IsUnique();
 
                     b.ToTable("User", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("c3f0b2a1-e4d5-4f67-890a-1234567890ab"),
+                            CreateAt = new DateTime(2025, 6, 13, 10, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "mfrinfo@mail.com",
+                            Name = "Administrador",
+                            UpdateAt = new DateTime(2025, 6, 13, 10, 0, 0, 0, DateTimeKind.Utc)
+                        });
                 });
 #pragma warning restore 612, 618
         }

@@ -95,7 +95,6 @@ namespace Api.Service.Services
                 message = "Usuário logado com sucesso",
                 name = user.Name,
                 userName = user.Email
-                
             };
         }
     }

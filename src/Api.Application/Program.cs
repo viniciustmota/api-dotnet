@@ -131,9 +131,6 @@ builder.Services.AddSwaggerGen(c =>
 
 ConfigureService.ConfigureDependenciesService(builder.Services);
 
-// !!! IMPORTANTE: O ConfigureRepository.ConfigureDependenciesRepository NÃO DEVE CHAMAR AddDbContext !!!
-// Ele deve APENAS registrar os repositórios (interfaces e implementações).
-// Se ele contém AddDbContext, remova de lá.
 ConfigureRepository.ConfigureDependenciesRepository(builder.Services, finalConnectionString);
 
 
@@ -148,11 +145,8 @@ var config = new AutoMapper.MapperConfiguration(cfg =>
 IMapper mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
-
 var app = builder.Build();
 
-// SEEDING DE DADOS E APLICAÇÃO DE MIGRAÇÕES NA INICIALIZAÇÃO
-// CORREÇÃO AQUI: app.Services.GetRequiredService<IServiceScopeFactory>()
 if (builder.Configuration.GetValue<bool>("ApplyMigrations"))
 {
     var logger = app.Services.GetRequiredService<ILogger<Program>>();

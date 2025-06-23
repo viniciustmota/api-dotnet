@@ -6,37 +6,47 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- SELEÇÃO DINÂMICA DA CONNECTION STRING E PROVEDOR ---
-string? selectedDatabase = builder.Configuration.GetConnectionString("DATABASE"); 
+if (builder.Environment.IsEnvironment("Testing"))
+{
+    Environment.SetEnvironmentVariable("MYSQL_CONNECTION", "Persist Security Info=True;Server=172.23.0.1;Port=3306;Database=dbAPI_Integration;Uid=viniciustmota;Pwd=1234;");
+    Environment.SetEnvironmentVariable("SQLSERVER_CONNECTION", "Persist Security Info=True;Server=.\\SQLEXPRESS2022;Initial Catalog=dbapi_integration;MultipleActiveResultSets=true;User ID=sa;Password=DevSysth2025@;TrustServerCertificate=True;");
+    Environment.SetEnvironmentVariable("DATABASE", "MYSQL");
+    Environment.SetEnvironmentVariable("Audience", "ExemploAudience");
+    Environment.SetEnvironmentVariable("Issuer", "ExemploIssuer");
+    Environment.SetEnvironmentVariable("Seconds", "28800");
+    Environment.SetEnvironmentVariable("MIGRATION", "APLICAR");
+}
+
+string? selectedDatabase = Environment.GetEnvironmentVariable("DATABASE"); 
 string? finalConnectionString = "";
 
 Action<DbContextOptionsBuilder> dbContextOptionsAction = null; 
 
 if (string.IsNullOrEmpty(selectedDatabase))
 {
-    throw new InvalidOperationException("A flag 'DATABASE' não foi configurada na seção ConnectionStrings do appsettings.json. Deve ser 'MYSQL' ou 'SQLSERVER'.");
+    throw new InvalidOperationException("A flag 'DATABASE' não foi configurada na seção env do launch.json. Deve ser 'MYSQL' ou 'SQLSERVER'.");
 }
 
-switch (selectedDatabase.ToUpper())
+switch (selectedDatabase.ToLower())
 {
-    case "MYSQL":
-        finalConnectionString = builder.Configuration.GetConnectionString("MYSQL_CONNECTION");
+    case "mysql":
+        finalConnectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION");
         if (string.IsNullOrEmpty(finalConnectionString))
         {
-            throw new InvalidOperationException("A string de conexão 'MYSQL_CONNECTION' não foi encontrada no appsettings.json.");
+            throw new InvalidOperationException("A string de conexão 'MYSQL_CONNECTION' não foi encontrada no env do launch.json.");
         }
         dbContextOptionsAction = options => options.UseMySql(finalConnectionString, ServerVersion.AutoDetect(finalConnectionString));
         break;
-    case "SQLSERVER":
-        finalConnectionString = builder.Configuration.GetConnectionString("SQLSERVER_CONNECTION");
+    case "sqlserver":
+        finalConnectionString = Environment.GetEnvironmentVariable("SQLSERVER_CONNECTION");
         if (string.IsNullOrEmpty(finalConnectionString))
         {
-            throw new InvalidOperationException("A string de conexão 'SQLSERVER_CONNECTION' não foi encontrada no appsettings.json.");
+            throw new InvalidOperationException("A string de conexão 'SQLSERVER_CONNECTION' não foi encontrada no env do launch.json.");
         }
         dbContextOptionsAction = options => options.UseSqlServer(finalConnectionString);
         break;
@@ -51,15 +61,9 @@ if (string.IsNullOrEmpty(finalConnectionString))
 
 builder.Services.AddDbContext<MyContext>(dbContextOptionsAction);
 
+
 var signingConfigurations = new SigningConfigurations();
 builder.Services.AddSingleton(signingConfigurations);
-
-var tokenConfigurations = builder.Configuration.GetSection("TokenConfigurations").Get<TokenConfigurations>();
-if (tokenConfigurations == null)
-{
-    throw new InvalidOperationException("A seção 'TokenConfigurations' não foi encontrada ou não pôde ser mapeada para a classe TokenConfigurations. Verifique appsettings.json e a classe TokenConfigurations.");
-}
-builder.Services.AddSingleton(tokenConfigurations);
 
 builder.Services.AddAuthentication(authOptions =>
 {
@@ -67,10 +71,12 @@ builder.Services.AddAuthentication(authOptions =>
     authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(bearerOptions =>
 {
+    var serviceProvider = builder.Services.BuildServiceProvider();
+
     var paramsValidation = bearerOptions.TokenValidationParameters;
     paramsValidation.IssuerSigningKey = signingConfigurations.Key;
-    paramsValidation.ValidAudience = tokenConfigurations.Audience;
-    paramsValidation.ValidIssuer = tokenConfigurations.Issuer;
+    paramsValidation.ValidAudience = Environment.GetEnvironmentVariable("Audience");
+    paramsValidation.ValidIssuer = Environment.GetEnvironmentVariable("Issuer");
     paramsValidation.ValidateIssuerSigningKey = true;
     paramsValidation.ValidateLifetime = true;
     paramsValidation.ClockSkew = TimeSpan.Zero;
@@ -82,7 +88,6 @@ builder.Services.AddAuthorization(auth =>
         .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
         .RequireAuthenticatedUser().Build());
 });
-
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>
@@ -133,7 +138,6 @@ ConfigureService.ConfigureDependenciesService(builder.Services);
 
 ConfigureRepository.ConfigureDependenciesRepository(builder.Services, finalConnectionString);
 
-
 // AutoMapper
 var config = new AutoMapper.MapperConfiguration(cfg =>
 {
@@ -147,10 +151,10 @@ builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();
 
-if (builder.Configuration.GetValue<bool>("ApplyMigrations"))
+if (Environment.GetEnvironmentVariable("MIGRATION").ToLower() == "APLICAR".ToLower())
 {
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    logger.LogInformation("Flag 'ApplyMigrations' é TRUE. Tentando aplicar migrações do banco de dados...");
+    logger.LogInformation("Tentando aplicar migrações do banco de dados...");
 
     using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
     {
@@ -203,3 +207,5 @@ app.UseSwaggerUI(c =>
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
+
+public partial class Program { }

@@ -17,16 +17,12 @@ namespace Api.CrossCutting.DependencyInjection
             serviceCollection.AddScoped<IUserRepository, UserImplementation>();
 
 
-            var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
-            .Build();
+            var configuration = new ConfigurationBuilder();            
 
             serviceCollection.AddDbContext<MyContext>(options =>
             {
                 var optionsBuilder = new DbContextOptionsBuilder<MyContext>();
-                if (configuration.GetConnectionString("DATABASE").ToLower() == "SQLSERVER".ToLower())
+                if (Environment.GetEnvironmentVariable("DATABASE").ToLower() == "SQLSERVER".ToLower())
                 {
                     optionsBuilder.UseSqlServer(connectionString);
                 }

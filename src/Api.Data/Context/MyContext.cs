@@ -1,4 +1,5 @@
 using Api.Data.Mapping;
+using Api.Data.Seeds;
 using Api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,10 @@ namespace Api.Data.Context
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserEntity>(new UserMap().Configure);
 
+            modelBuilder.Entity<UfEntity>(new UfMap().Configure);
+            modelBuilder.Entity<MunicipioEntity>(new MunicipioMap().Configure);
+            modelBuilder.Entity<CepEntity>(new CepMap().Configure);
+
             modelBuilder.Entity<UserEntity>().HasData(
                 new UserEntity
                 {
@@ -35,6 +40,8 @@ namespace Api.Data.Context
                     UpdateAt = new DateTime(2025, 6, 13, 10, 0, 0, DateTimeKind.Utc), // <-- DATA FIXA! (Ou null se permitido)
                 }
             );
+
+            UfSeeds.Ufs(modelBuilder);
         }
     }
 }

@@ -7,27 +7,39 @@ namespace Api.Data.Context
     public class ContextFactory : IDesignTimeDbContextFactory<MyContext>
     {
         public MyContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
+{
+    try
+    {
+        var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Api.Application");
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(basePath)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
             .Build();
 
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var database = configuration["DATABASE"];
 
-            var optionsBuilder = new DbContextOptionsBuilder<MyContext>();
-            if (configuration.GetConnectionString("DATABASE").ToLower() == "SQLSERVER".ToLower())
-            {
-                optionsBuilder.UseSqlServer(connectionString);
-            }
-            else
-            {
-                optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));    
-            }
-            
-            
-            return new MyContext(optionsBuilder.Options);
+        var optionsBuilder = new DbContextOptionsBuilder<MyContext>();
+
+        if (string.Equals(database, "SQLSERVER", StringComparison.OrdinalIgnoreCase))
+        {
+            var connectionString = configuration.GetConnectionString("SQLSERVER_CONNECTION");
+            optionsBuilder.UseSqlServer(connectionString);
         }
+        else
+        {
+            var connectionString = configuration.GetConnectionString("MYSQL_CONNECTION");
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+        }
+
+        return new MyContext(optionsBuilder.Options);
+    }
+    catch (Exception ex)
+    {
+        // Lance uma nova exceção com a mensagem completa para facilitar o debug
+        throw new Exception($"Erro ao criar DbContext no design time: {ex.Message}", ex);
+    }
+}
+
     }
 }

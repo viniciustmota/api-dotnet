@@ -21,7 +21,7 @@ namespace Api.Service.Test.AutoMapper
             {
                 Id = Guid.NewGuid(),
                 Nome = _faker.Address.State(),
-                Sigla = _faker.Address.State().Substring(1, 3),
+                Sigla = _faker.Address.StateAbbr(),
                 CreateAt = DateTime.UtcNow,
                 UpdateAt = DateTime.UtcNow
             };
@@ -33,7 +33,7 @@ namespace Api.Service.Test.AutoMapper
                 {
                     Id = Guid.NewGuid(),
                     Nome = _faker.Address.State(),
-                    Sigla = _faker.Address.State().Substring(1, 3),
+                    Sigla = _faker.Address.StateAbbr(),
                     CreateAt = DateTime.UtcNow,
                     UpdateAt = DateTime.UtcNow
                 };

@@ -5,11 +5,11 @@ namespace Api.Service.Test.Usuario
 {
     public class UsuarioTestes
     {
-        public static string NomeUsuario { get; set; }
-        public static string EmailUsuario { get; set; }
-        public static string NomeUsuarioAlterado { get; set; }
-        public static string EmailUsuarioAlterado { get; set; }
-        public static Guid IdUsuario { get; set; }
+        public string NomeUsuario { get; private set; }
+        public string EmailUsuario { get; private set; }
+        public string NomeUsuarioAlterado { get; private set; }
+        public string EmailUsuarioAlterado { get; private set; }
+        public Guid IdUsuario { get; private set; }
         public List<UserDto> listaUserDto = new List<UserDto>();
         public UserDto userDto;
         public UserDtoCreate userDtoCreate;

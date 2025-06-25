@@ -1,5 +1,4 @@
 using Api.Domain.Dtos.User;
-using Api.Domain.Entities;
 
 namespace Api.Domain.Interfaces.Service.User
 {

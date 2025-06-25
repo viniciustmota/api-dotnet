@@ -38,4 +38,9 @@
   <Copy SourceFiles="../Api.Application/bin/Debug/net9.0/application.deps.json" DestinationFiles="bin/Debug/net9.0/testhost.deps.json" SkipUnchangedFiles="true" />
 </Target>
 
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

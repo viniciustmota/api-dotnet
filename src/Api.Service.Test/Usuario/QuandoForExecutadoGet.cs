@@ -19,7 +19,7 @@ namespace Api.Service.Test.Usuario
 
             var result = await _service.Get(IdUsuario);
             Assert.NotNull(result);
-            Assert.True(result.Id == IdUsuario);
+            Assert.Equal(IdUsuario, result.Id);
             Assert.Equal(NomeUsuario, result.Name);
 
             _serviceMock = new Mock<IUserService>();

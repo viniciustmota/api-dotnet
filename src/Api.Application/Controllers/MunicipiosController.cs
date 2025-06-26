@@ -1,20 +1,17 @@
 using System.Net;
-using Api.Domain.Dtos.User;
-using Api.Domain.Entities;
-using Api.Domain.Interfaces.Service.User;
+using Api.Domain.Dtos.Municipio;
+using Api.Domain.Interfaces.Services.Municipio;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Application.Controllers
 {
-    // http://localhost:5093/api/users
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class MunicipiosController : ControllerBase
     {
-        private IUserService _service;
-        public UsersController(IUserService service)
+        public IMunicipioService _service { get; set; }
+        public MunicipiosController(IMunicipioService service)
         {
             _service = service;
         }
@@ -25,7 +22,7 @@ namespace Api.Application.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // 400 bad request - solicitação inválida
+                return BadRequest(ModelState);
             }
 
             try
@@ -40,13 +37,14 @@ namespace Api.Application.Controllers
 
         [Authorize("Bearer")]
         [HttpGet]
-        [Route("{id}", Name = "GetWithId")]
+        [Route("{id}", Name = "GetMunicipioWithId")]
         public async Task<ActionResult> Get(Guid id)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // 400 bad request - solicitação inválida
+                return BadRequest(ModelState);
             }
+
             try
             {
                 var result = await _service.Get(id);
@@ -54,6 +52,7 @@ namespace Api.Application.Controllers
                 {
                     return NotFound();
                 }
+
                 return Ok(result);
             }
             catch (ArgumentException e)
@@ -62,20 +61,73 @@ namespace Api.Application.Controllers
             }
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public async Task<ActionResult> Post([FromBody] UserDtoCreate user)
+        [Authorize("Bearer")]
+        [HttpGet]
+        [Route("Complete/{id}")]
+        public async Task<ActionResult> GetCompleteById(Guid id)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // 400 bad request - solicitação inválida
+                return BadRequest(ModelState);
             }
+
             try
             {
-                var result = await _service.Post(user);
+                var result = await _service.GetCompleteById(id);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        [Authorize("Bearer")]
+        [HttpGet]
+        [Route("byIBGE/{codigoIBGE}")]
+        public async Task<ActionResult> GetCompleteByIBGE(int codigoIBGE)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await _service.GetCompleteByIBGE(codigoIBGE);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        [Authorize("Bearer")]
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody] MunicipioDtoCreate dtoCreate)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await _service.Post(dtoCreate);
                 if (result != null)
                 {
-                    return Created(new Uri(Url.Link("GetWithId", new { id = result.Id })), result);
+                    return Created(new Uri(Url.Link("GetMunicipioWithId", new { id = result.Id })), result);
                 }
                 else
                 {
@@ -90,15 +142,16 @@ namespace Api.Application.Controllers
 
         [Authorize("Bearer")]
         [HttpPut]
-        public async Task<ActionResult> Put([FromBody] UserDtoUpdate user)
+        public async Task<ActionResult> Put([FromBody] MunicipioDtoUpdate dtoUpdate)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // 400 bad request - solicitação inválida
+                return BadRequest(ModelState);
             }
+
             try
             {
-                var result = await _service.Put(user);
+                var result = await _service.Put(dtoUpdate);
                 if (result != null)
                 {
                     return Ok(result);

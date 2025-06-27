@@ -14,16 +14,18 @@ namespace Api.Service.Test
 {
     public abstract class BaseIntegration : IDisposable
     {
-        public MyContext MyContext { get; private set; }
-        public HttpClient Client { get; private set; }
-        public IMapper Mapper { get; private set; }
-        public string HostApi { get; set; }
+        public MyContext myContext { get; private set; }
+        public HttpClient client { get; private set; }
+        public IMapper mapper { get; private set; }
+        public string hostApi { get; set; }
+
+        public HttpResponseMessage response { get; set; }
 
         private readonly WebApplicationFactory<Program> _factory;
 
         public BaseIntegration()
         {
-            HostApi = "http://localhost:5093/api/";
+            hostApi = "http://localhost:5093/api/";
             _factory = new WebApplicationFactory<Program>()
                 .WithWebHostBuilder(builder =>
                 {
@@ -38,13 +40,13 @@ namespace Api.Service.Test
                     });
                 });
 
-            Client = _factory.CreateClient();
+            client = _factory.CreateClient();
 
             var scope = _factory.Services.CreateScope();
-            MyContext = scope.ServiceProvider.GetRequiredService<MyContext>();
-            MyContext.Database.Migrate();
+            myContext = scope.ServiceProvider.GetRequiredService<MyContext>();
+            myContext.Database.Migrate();
 
-            Mapper = new AutoMapperFixture().GetMapper();
+            mapper = new AutoMapperFixture().GetMapper();
         }
 
         public async Task AdicionarToken()
@@ -54,13 +56,13 @@ namespace Api.Service.Test
                 Email = "mfrinfo@mail.com"
             };
 
-            var responseLogin = await PostJsonAsync(loginDto, $"{HostApi}login", Client);
+            var responseLogin = await PostJsonAsync(loginDto, $"{hostApi}login", client);
             responseLogin.EnsureSuccessStatusCode();
 
             var jsonLogin = await responseLogin.Content.ReadAsStringAsync();
             var loginObject = JsonConvert.DeserializeObject<LoginResponseDto>(jsonLogin);
 
-            Client.DefaultRequestHeaders.Authorization =
+            client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", loginObject.accessToken);
         }
 
@@ -73,8 +75,8 @@ namespace Api.Service.Test
 
         public void Dispose()
         {
-            MyContext?.Dispose();
-            Client?.Dispose();
+            myContext?.Dispose();
+            client?.Dispose();
             _factory?.Dispose();
         }
     }

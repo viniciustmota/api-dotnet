@@ -32,7 +32,7 @@ namespace Api.Integration.Test.Usuario
             };
 
             // Post
-            var response = await PostJsonAsync(userDto, $"{HostApi}users", Client);
+            var response = await PostJsonAsync(userDto, $"{hostApi}users", client);
             var postResult = await response.Content.ReadAsStringAsync();
             var registroPost = JsonConvert.DeserializeObject<UserDtoCreateResult>(postResult);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -41,7 +41,7 @@ namespace Api.Integration.Test.Usuario
             Assert.True(registroPost.Id != default(Guid));
 
             // Get All
-            response = await Client.GetAsync($"{HostApi}users");
+            response = await client.GetAsync($"{hostApi}users");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var jsonResult = await response.Content.ReadAsStringAsync();
@@ -61,7 +61,7 @@ namespace Api.Integration.Test.Usuario
             var stringContent = new StringContent(JsonConvert.SerializeObject(updateUserDto),
                                     Encoding.UTF8, "application/json");
 
-            response = await Client.PutAsync($"{HostApi}users", stringContent);
+            response = await client.PutAsync($"{hostApi}users", stringContent);
             jsonResult = await response.Content.ReadAsStringAsync();
             var registroAtualizado = JsonConvert.DeserializeObject<UserDtoUpdateResult>(jsonResult);
 
@@ -70,7 +70,7 @@ namespace Api.Integration.Test.Usuario
             Assert.NotEqual(registroPost.Email, registroAtualizado.Email);
 
             // GET por ID
-            response = await Client.GetAsync($"{HostApi}users/{registroAtualizado.Id}");
+            response = await client.GetAsync($"{hostApi}users/{registroAtualizado.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             jsonResult = await response.Content.ReadAsStringAsync();
             var registroSelecionado = JsonConvert.DeserializeObject<UserDto>(jsonResult);
@@ -79,11 +79,11 @@ namespace Api.Integration.Test.Usuario
             Assert.Equal(registroSelecionado.Email, registroAtualizado.Email);
 
             // DELETE
-            response = await Client.DeleteAsync($"{HostApi}users/{registroAtualizado.Id}");
+            response = await client.DeleteAsync($"{hostApi}users/{registroAtualizado.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             // GET ID depois do DELETE
-            response = await Client.GetAsync($"{HostApi}users/{registroAtualizado.Id}");
+            response = await client.GetAsync($"{hostApi}users/{registroAtualizado.Id}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }

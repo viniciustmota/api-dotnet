@@ -23,7 +23,7 @@ namespace Api.Service.Services
             _configuration = configuration;
         }
 
-        public async Task<object> FindByLogin(LoginDto user)
+        public async Task<LoginResultDto> FindByLogin(LoginDto user)
         {
             var baseUser = new UserEntity();
             if (user != null && !string.IsNullOrWhiteSpace(user.Email))
@@ -31,9 +31,9 @@ namespace Api.Service.Services
                 baseUser = await _repository.FindByLogin(user.Email);
                 if (baseUser == null)
                 {
-                    return new
+                    return new LoginResultDto
                     {
-                        aunthenticated = false,
+                        authenticated = false,
                         message = "Falha ao autenticar"
                     };
                 }
@@ -57,9 +57,9 @@ namespace Api.Service.Services
             }
             else
             {
-                return new
+                return new LoginResultDto
                     {
-                        aunthenticated = false,
+                        authenticated = false,
                         message = "Falha ao autenticar"
                     };
             }
@@ -81,9 +81,9 @@ namespace Api.Service.Services
             return token;
         }
 
-        private object SucessObject(DateTime createDate, DateTime expirationDate, string token, UserEntity user)
+        private LoginResultDto SucessObject(DateTime createDate, DateTime expirationDate, string token, UserEntity user)
         {
-            return new
+            return new LoginResultDto
             {
                 authenticated = true,
                 created = createDate.ToString("yyyy-MM-dd HH:mm:ss"),

@@ -21,12 +21,12 @@ namespace Api.Service.Test.Login
         public async Task E_Possivel_Executar_Metodo_FindByLogin()
         {
             var email = _faker.Internet.Email();
-            var objetoRetorno = new
+            var objetoRetorno = new LoginResultDto
             {
                 authenticated = true,
-                created = DateTime.UtcNow,
-                expiration = DateTime.UtcNow.AddHours(8),
-                accessToken = Guid.NewGuid(),
+                created = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
+                expiration = DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss"),
+                accessToken = Guid.NewGuid().ToString(),
                 message = "Usuário logado com sucesso",
                 name = _faker.Name.FullName(),
                 userName = email

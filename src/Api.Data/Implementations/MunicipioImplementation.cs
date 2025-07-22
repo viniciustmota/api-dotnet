@@ -15,6 +15,11 @@ namespace Api.Data.Implementations
             _dataset = context.Set<MunicipioEntity>();
         }
 
+        public async Task<IEnumerable<MunicipioEntity>> GetAll()
+        {
+            return await _dataset.Include(m => m.Uf).ToListAsync();
+        }
+
         public async Task<MunicipioEntity> GetCompleteByIBGE(int codIBGE)
         {
             return await _dataset.Include(m => m.Uf)
@@ -25,6 +30,11 @@ namespace Api.Data.Implementations
         {
             return await _dataset.Include(m => m.Uf)
                                     .FirstOrDefaultAsync(m => m.Id.Equals(id));
+        }
+
+        public IQueryable<MunicipioEntity> GetQueryable()
+        {
+            return _dataset.Include(m => m.Uf).AsNoTracking();
         }
     }
 }

@@ -1,4 +1,5 @@
 using Api.Domain.Dtos.Cep;
+using Api.Domain.Dtos.Metadata;
 
 namespace Api.Domain.Interfaces.Services.Cep
 {
@@ -6,6 +7,7 @@ namespace Api.Domain.Interfaces.Services.Cep
     {
         Task<CepDto> Get(Guid id);
         Task<CepDto> Get(string cep);
+        Task<MetadataDto> GetMetadata();
         Task<CepDtoCreateResult> Post(CepDtoCreate cep);
         Task<CepDtoUpdateResult> Put(CepDtoUpdate cep);
         Task<bool> Delete(Guid id);

@@ -1,4 +1,5 @@
 using Api.Domain.Dtos.Cep;
+using Api.Domain.Dtos.Metadata;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Services.Cep;
 using Api.Domain.Models;
@@ -51,6 +52,11 @@ namespace Api.Service.Services
         public async Task<bool> Delete(Guid id)
         {
             return await _repository.DeleteAsync(id);
+        }
+
+        public Task<MetadataDto> GetMetadata()
+        {
+            throw new NotImplementedException();
         }
     }
 }

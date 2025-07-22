@@ -18,22 +18,37 @@ namespace Api.Application.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             if (loginDto == null)
             {
-                return BadRequest();
+                return BadRequest("Dados de login não informados.");
             }
 
             try
             {
-                var result = await service.FindByLogin(loginDto);
-                if (result != null)
+                LoginResultDto result = await service.FindByLogin(loginDto);
+
+                if (result == null)
                 {
-                    return Ok(result);
+                    return Unauthorized(new
+                    {
+                        authenticated = false,
+                        message = "Credenciais inválidas ou usuário não autorizado."
+                    });
                 }
-                else
-                {
-                    return NotFound();
-                }
+
+                if (result.authenticated)
+                    {
+                        return Ok(result);
+                    }
+                    else
+                    {
+                        return Unauthorized(new
+                        {
+                            authenticated = false,
+                            message = result.message ?? "Falha ao autenticar."
+                        });
+                    }
             }
             catch (ArgumentException e)
             {

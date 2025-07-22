@@ -53,7 +53,7 @@ namespace Api.Service.Test
         {
             var loginDto = new LoginDto()
             {
-                Email = "mfrinfo@mail.com"
+                Email = "vinicius@mail.com"
             };
 
             var responseLogin = await PostJsonAsync(loginDto, $"{hostApi}login", client);

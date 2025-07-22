@@ -1,5 +1,7 @@
 using System.Net;
 using Api.Domain.Dtos.Cep;
+using Api.Domain.Dtos.Field;
+using Api.Domain.Dtos.Metadata;
 using Api.Domain.Interfaces.Services.Cep;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -136,5 +138,32 @@ namespace Api.Application.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
             }
         }
+
+        // public async Task<MetadataDto> GetMetadata()
+        // {
+        //     var ufs = (await _service.Get(id))
+        //     .OrderBy(u => u.Sigla)
+        //     .Select(uf => new OptionDto
+        //     {
+        //         Label = uf.Sigla,
+        //         Value = uf.Id
+        //     }).ToList();
+
+        //     var metadata = new MetadataDto
+        //     {
+        //         Version = 1,
+        //         Title = "CEPs",
+        //         KeepFilters = false,
+        //         Fields = new List<FieldDto> {
+        //         new FieldDto{ Property = "", Label = "Id", Type = "string", Required = true, Visible = false, Key=true},
+        //         new FieldDto{ Property = "nome", Label = "Município", Type = "string", Required = true, Visible = true},
+        //         new FieldDto{ Property = "codIBGE", Label = "Código IBGE", Type = "number", Required = true, Visible = true },
+        //         new FieldDto{ Property = "ufId", Label = "UF", Type = "combo", Required = true, Options = ufs, Visible = true },
+        //         new FieldDto{ Property = "ufSigla", Label = "UF", Type = "string" , Required = false, Editable = false, Visible = true}
+        //     }
+        //     };
+
+        //     return metadata;
+        // }
     }
 }

@@ -11,6 +11,7 @@ namespace Api.Domain.Repository
     {
         Task<MunicipioEntity> GetCompleteById(Guid id);
         Task<MunicipioEntity> GetCompleteByIBGE(int codIBGE);
-
+        Task<IEnumerable<MunicipioEntity>> GetAll();
+        IQueryable<MunicipioEntity> GetQueryable();
     }
 }

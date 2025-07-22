@@ -1,3 +1,5 @@
+using Api.Domain.Dtos;
+using Api.Domain.Dtos.Metadata;
 using Api.Domain.Dtos.Municipio;
 
 namespace Api.Domain.Interfaces.Services.Municipio
@@ -7,10 +9,12 @@ namespace Api.Domain.Interfaces.Services.Municipio
         Task<MunicipioDto> Get(Guid id);
         Task<MunicipioDtoCompleto> GetCompleteById(Guid id);
         Task<MunicipioDtoCompleto> GetCompleteByIBGE(int codIBGE);
-        Task<IEnumerable<MunicipioDto>> GetAll();
+        Task<PagedResultDto<MunicipioDto>> GetAll(string? search = null);
+        Task<MetadataDto> GetMetadata();
         Task<MunicipioDtoCreateResult> Post(MunicipioDtoCreate municipio);
         Task<MunicipioDtoUpdateResult> Put(MunicipioDtoUpdate municipio);
         Task<bool> Delete(Guid id);
+        Task<int> DeleteBatch(List<Guid> ids);
 
 
     }

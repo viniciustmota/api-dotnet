@@ -1,0 +1,25 @@
+# Query: mfrinfo@mail.com
+
+8 results - 7 files
+
+src/Api.Data/Context/MyContext.cs:
+  35:                     Email = "vinicius@mail.com",
+
+src/Api.Data/Migrations/20250613134237_UserMigration.Designer.cs:
+  61:                             Email = "vinicius@mail.com",
+
+src/Api.Data/Migrations/20250623130241_Uf_Municipio_Cep.Designer.cs:
+  353:                             Email = "vinicius@mail.com",
+
+src/Api.Data/Migrations/20250623132251_Uf_Municipio_Cep_Com_Data_Fixa.Designer.cs:
+  353:                             Email = "vinicius@mail.com",
+
+src/Api.Data/Migrations/MyContextModelSnapshot.cs:
+  350:                             Email = "vinicius@mail.com",
+
+src/Api.Data.Test/UsuarioCrudCompleto.cs:
+  62:                 var _usuarioPadrao = await _repositorio.FindByLogin("vinicius@mail.com");
+  64:                 Assert.Equal("vinicius@mail.com", _usuarioPadrao.Email);
+
+src/Api.Integration.Test/BaseIntegration.cs:
+  56:                 Email = "vinicius@mail.com"

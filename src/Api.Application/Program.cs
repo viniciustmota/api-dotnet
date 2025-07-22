@@ -1,7 +1,9 @@
 using Api.CrossCutting.DependencyInjection;
 using Api.CrossCutting.Mappings;
 using Api.Data.Context;
+using Api.Domain.Interfaces.Services.Field;
 using Api.Domain.Security;
+using Api.Service.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -58,6 +60,8 @@ if (string.IsNullOrEmpty(finalConnectionString))
 {
     throw new InvalidOperationException("A string de conexão final está vazia após a seleção do banco de dados.");
 }
+
+builder.Services.AddScoped<IMetadataService, MetadataService>();
 
 builder.Services.AddDbContext<MyContext>(dbContextOptionsAction);
 
@@ -134,6 +138,18 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials();
+        });
+});
+
 ConfigureService.ConfigureDependenciesService(builder.Services);
 
 ConfigureRepository.ConfigureDependenciesRepository(builder.Services, finalConnectionString);
@@ -173,7 +189,7 @@ if (Environment.GetEnvironmentVariable("MIGRATION").ToLower() == "APLICAR".ToLow
                 {
                     Id = new Guid("c3f0b2a1-e4d5-4f67-890a-1234567890ab"), // Use um GUID estático
                     Name = "Administrador",
-                    Email = "mfrinfo@mail.com",
+                    Email = "vinicius@mail.com",
                     CreateAt = new DateTime(2025, 6, 13, 10, 0, 0, DateTimeKind.Utc),
                     UpdateAt = new DateTime(2025, 6, 13, 10, 0, 0, DateTimeKind.Utc)
                 });
@@ -205,6 +221,11 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = string.Empty;
 });
 app.UseHttpsRedirection();
+
+app.UseCors("AllowSpecificOrigin");
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 app.Run();
 

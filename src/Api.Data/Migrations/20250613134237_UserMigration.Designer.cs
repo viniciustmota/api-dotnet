@@ -58,7 +58,7 @@ namespace Data.Migrations
                         {
                             Id = new Guid("c3f0b2a1-e4d5-4f67-890a-1234567890ab"),
                             CreateAt = new DateTime(2025, 6, 13, 10, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "mfrinfo@mail.com",
+                            Email = "vinicius@mail.com",
                             Name = "Administrador",
                             UpdateAt = new DateTime(2025, 6, 13, 10, 0, 0, 0, DateTimeKind.Utc)
                         });

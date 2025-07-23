@@ -157,6 +157,16 @@ namespace Api.Application.Controllers
             }
         }
 
+        [Authorize("Bearer")]
+        [HttpGet("{cep}/visualizacao")]
+        public async Task<IActionResult> GetVisualizacao(string cep)
+        {
+            var result = await _service.GetVisualizacao(cep);
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
+
+
         // public async Task<MetadataDto> GetMetadata()
         // {
         //     var ufs = (await _service.Get(id))

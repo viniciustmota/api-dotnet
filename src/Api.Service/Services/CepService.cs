@@ -16,7 +16,7 @@ namespace Api.Service.Services
         private readonly IMetadataService _metadataService;
         private readonly IServiceProvider _serviceProvider;
 
-        public CepService(ICepRepository repository, IMapper mapper,  IMetadataService metadataService, IServiceProvider serviceProvider)
+        public CepService(ICepRepository repository, IMapper mapper, IMetadataService metadataService, IServiceProvider serviceProvider)
         {
             _repository = repository;
             _mapper = mapper;
@@ -61,7 +61,7 @@ namespace Api.Service.Services
 
         public async Task<MetadataDto> GetMetadata()
         {
-           
+
 
             var metadata = new MetadataDto
             {
@@ -72,6 +72,20 @@ namespace Api.Service.Services
             };
 
             return metadata;
+        }
+        
+        public async Task<CepDtoVisualizacao> GetVisualizacao(string cep)
+        {
+            var entity = await _repository.SelectAsync(cep);
+
+            return new CepDtoVisualizacao
+            {
+                Cep = entity.Cep,
+                Logradouro = entity.Logradouro,
+                Numero = entity.Numero,
+                Municipio = entity.Municipio?.Nome,
+                UfSigla = entity.Municipio?.Uf?.Sigla
+            };
         }
     }
 }

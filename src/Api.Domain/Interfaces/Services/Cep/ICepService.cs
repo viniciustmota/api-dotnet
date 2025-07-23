@@ -8,6 +8,7 @@ namespace Api.Domain.Interfaces.Services.Cep
         Task<CepDto> Get(Guid id);
         Task<CepDto> Get(string cep);
         Task<MetadataDto> GetMetadata();
+        Task<CepDtoVisualizacao> GetVisualizacao(string cep);
         Task<CepDtoCreateResult> Post(CepDtoCreate cep);
         Task<CepDtoUpdateResult> Put(CepDtoUpdate cep);
         Task<bool> Delete(Guid id);

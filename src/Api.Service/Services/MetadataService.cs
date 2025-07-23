@@ -42,7 +42,8 @@ namespace Api.Service.Services
                     Type = MapType(prop.PropertyType, prop),
                     Required = requiredAttr != null,
                     Key = keyAttr != null,
-                    Visible = visibleAttr != null ? visibleAttr.Visible : false
+                    Visible = visibleAttr != null ? visibleAttr.Visible : false,
+                    Editable = true
                 };
 
                 if (optionsAttr != null && !string.IsNullOrEmpty(optionsAttr.Source))
@@ -73,7 +74,9 @@ namespace Api.Service.Services
                                 .Select(m => new OptionDto
                                 {
                                     Label = m.Nome,
-                                    Value = m.Id
+                                    Value = m.Id,
+                                    // CodIbge = m.CodIBGE,
+                                    // Uf = m.UfId
                                 })
                                 .ToList();
 

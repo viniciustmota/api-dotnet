@@ -38,11 +38,11 @@ namespace Api.Domain.Dtos.Cep
         [Visible(true)]
         [Options("municipios")]
         public Guid MunicipioId { get; set; }
-        
+
         [Required]
         [JsonPropertyName("municipio")]
         [Display(Name = "Município")]
-        [Visible(true)]
+        [Visible(false)]
         public MunicipioDtoCompleto Municipio { get; set; }
 
     }

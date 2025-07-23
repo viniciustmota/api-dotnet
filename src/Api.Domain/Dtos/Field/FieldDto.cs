@@ -8,7 +8,7 @@ namespace Api.Domain.Dtos.Field
         public string Type { get; set; }
         public bool Required { get; set; }
         public List<OptionDto> Options { get; set; }
-        public bool Editable { get; set; }
+        public bool Editable { get; set; } = true;
         public bool Visible { get; set; }
         public bool Key { get; set; }
 

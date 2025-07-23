@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using Api.Domain.Dtos.Field;
 using Api.Domain.Dtos.Municipio;
 using Api.Domain.Interfaces.Services.Field;
+using Api.Domain.Interfaces.Services.Municipio;
 using Api.Domain.Interfaces.Services.Uf;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -59,6 +60,24 @@ namespace Api.Service.Services
                                 }).ToList();
 
                             field.Options = ufs;
+                            break;
+                            
+                        case "municipios":
+                            var municipioService = serviceProvider.GetService<IMunicipioService>();
+                            if (municipioService == null)
+                                throw new InvalidOperationException("IMunicipioService não registrado no DI.");
+
+                            var result = await municipioService.GetAll();
+                            var municipios = result.Items
+                                .OrderBy(m => m.Nome)
+                                .Select(m => new OptionDto
+                                {
+                                    Label = m.Nome,
+                                    Value = m.Id
+                                })
+                                .ToList();
+
+                            field.Options = municipios;
                             break;
                     }
                 }

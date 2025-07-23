@@ -19,6 +19,24 @@ namespace Api.Application.Controllers
             _service = service;
         }
 
+        [HttpGet("metadata")]
+        public async Task<IActionResult> GetMetadata()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                return Ok(await _service.GetMetadata());
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
         [Authorize("Bearer")]
         [HttpGet]
         [Route("{id}", Name = "GetCepWithId")]

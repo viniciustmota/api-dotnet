@@ -2,6 +2,7 @@ using Api.Domain.Dtos.Cep;
 using Api.Domain.Dtos.Metadata;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Services.Cep;
+using Api.Domain.Interfaces.Services.Field;
 using Api.Domain.Models;
 using Api.Domain.Repository;
 using AutoMapper;
@@ -12,11 +13,15 @@ namespace Api.Service.Services
     {
         private ICepRepository _repository;
         private readonly IMapper _mapper;
+        private readonly IMetadataService _metadataService;
+        private readonly IServiceProvider _serviceProvider;
 
-        public CepService(ICepRepository repository, IMapper mapper)
+        public CepService(ICepRepository repository, IMapper mapper,  IMetadataService metadataService, IServiceProvider serviceProvider)
         {
             _repository = repository;
             _mapper = mapper;
+            _metadataService = metadataService ?? throw new ArgumentNullException(nameof(metadataService));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         public async Task<CepDto> Get(Guid id)
@@ -54,9 +59,19 @@ namespace Api.Service.Services
             return await _repository.DeleteAsync(id);
         }
 
-        public Task<MetadataDto> GetMetadata()
+        public async Task<MetadataDto> GetMetadata()
         {
-            throw new NotImplementedException();
+           
+
+            var metadata = new MetadataDto
+            {
+                Version = 1,
+                Title = "Ceps",
+                KeepFilters = false,
+                Fields = await _metadataService.GenerateMetadata<CepDto>(_serviceProvider)
+            };
+
+            return metadata;
         }
     }
 }

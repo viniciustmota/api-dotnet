@@ -37,23 +37,31 @@ namespace Api.Application.Controllers
         }
 
         [Authorize("Bearer")]
-        [HttpGet]
-        public async Task<ActionResult> GetAll([FromQuery] string? search)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+[HttpGet]
+public async Task<ActionResult> GetAll(
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 20,
+    [FromQuery] string? search = null,
+    [FromQuery] string? order = null,
+    [FromQuery] string? direction = null,
+    [FromQuery] string? filter = null)
+{
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
+    }
 
-            try
-            {
-                return Ok(await _service.GetAll(search));
-            }
-            catch (ArgumentException e)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
-            }
-        }
+    try
+    {
+        var result = await _service.GetAll(page, pageSize, search, order, direction, filter);
+        return Ok(result);
+    }
+    catch (ArgumentException e)
+    {
+        return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+    }
+}
+
 
         [Authorize("Bearer")]
         [HttpGet]

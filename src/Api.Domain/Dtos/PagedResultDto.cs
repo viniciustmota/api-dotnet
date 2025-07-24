@@ -18,6 +18,6 @@ namespace Api.Domain.Dtos
         public int PageSize { get; set; } = 10;
 
         [JsonPropertyName("hasNext")]
-        public bool HasNext { get; set; }
+        public bool HasNext { get; set; } = true;
     }
 }

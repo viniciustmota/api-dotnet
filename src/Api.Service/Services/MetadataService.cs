@@ -68,15 +68,16 @@ namespace Api.Service.Services
                             if (municipioService == null)
                                 throw new InvalidOperationException("IMunicipioService não registrado no DI.");
 
-                            var result = await municipioService.GetAll();
+                            var result = await municipioService.GetAll(
+                                1,                  
+                                int.MaxValue
+                            );
                             var municipios = result.Items
                                 .OrderBy(m => m.Nome)
                                 .Select(m => new OptionDto
                                 {
                                     Label = m.Nome,
                                     Value = m.Id,
-                                    // CodIbge = m.CodIBGE,
-                                    // Uf = m.UfId
                                 })
                                 .ToList();
 

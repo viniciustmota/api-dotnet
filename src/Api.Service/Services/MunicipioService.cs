@@ -13,6 +13,7 @@ using Api.Domain.Models;
 using Api.Domain.Repository;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace Api.Service.Services
 {
@@ -53,7 +54,13 @@ namespace Api.Service.Services
             return _mapper.Map<MunicipioDtoCompleto>(entity);
         }
 
-        public async Task<PagedResultDto<MunicipioDto>> GetAll(int page = 1, int pageSize = 10, string? search = null)
+        public async Task<PagedResultDto<MunicipioDto>> GetAll(
+            int page, 
+            int pageSize, 
+            string? search = null, 
+            string? order = null, 
+            string? direction = null, 
+            string? filter = null)
         {
             var query = _repository.GetQueryable()
                 .Include(m => m.Uf)
@@ -66,8 +73,17 @@ namespace Api.Service.Services
                     m.Nome.ToLower().Contains(normalized) ||
                     m.CodIBGE.ToString().Contains(normalized) ||
                     m.Uf.Sigla.ToLower().Contains(normalized)
-                    );
+                );
             }
+
+            if (!string.IsNullOrEmpty(order))
+            {
+                if (direction?.ToLower() == "descending")
+                    query = query.OrderBy($"{order} descending");
+                else
+                    query = query.OrderBy(order);
+            }
+
 
             var total = await query.CountAsync();
 
@@ -92,9 +108,13 @@ namespace Api.Service.Services
             return new PagedResultDto<MunicipioDto>
             {
                 Items = dtos,
-
+                HasNext = (page * pageSize) < total,
+                Page = page,
+                PageSize = pageSize,
+                Total = total
             };
         }
+
 
         public async Task<PagedResultDto<MunicipioDto>> GetAll(string? search)
         {

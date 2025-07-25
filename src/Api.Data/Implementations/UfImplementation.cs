@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data.Implementations
 {
-    public class UfImplementation : BaseRepository<UfEntity>, IUfRepository
+    public class UfImplementation : BaseRepository<UfEntity, Guid>, IUfRepository
     {
         private DbSet<UfEntity> _dataset;
 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data.Repository
 {
-    public class BaseRepository<T> : IRepository<T> where T : BaseEntity
+    public class BaseRepository<T, TId> : IRepository<T, TId> where T : BaseEntity
     {
         protected readonly MyContext _context;
         private DbSet<T> _dataset;
@@ -14,7 +14,7 @@ namespace Api.Data.Repository
             _context = context;
             _dataset = _context.Set<T>();
         }
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(TId id)
         {
             try
             {
@@ -55,12 +55,12 @@ namespace Api.Data.Repository
             return item;
         }
 
-        public async Task<bool> ExistAsync(Guid id)
+        public async Task<bool> ExistAsync(TId id)
         {
             return await _dataset.AnyAsync(p => p.Id.Equals(id));
         }
 
-        public async Task<T> SelectAsync(Guid id)
+        public async Task<T> SelectAsync(TId id)
         {
             try
             {
@@ -78,7 +78,8 @@ namespace Api.Data.Repository
             {
                 return await _dataset.ToListAsync();
             }
-            catch{
+            catch
+            {
                 throw;
             }
         }
@@ -103,6 +104,11 @@ namespace Api.Data.Repository
             }
 
             return item;
+        }
+        
+        public Task<IQueryable<T>> GetQueryable()
+        {
+            return Task.FromResult(_dataset.AsQueryable());
         }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data.Implementations
 {
-    public class UserImplementation : BaseRepository<UserEntity>, IUserRepository
+    public class UserImplementation : BaseRepository<UserEntity, Guid>, IUserRepository
     {
         private DbSet<UserEntity> _dataset;
         public UserImplementation(MyContext context) : base(context)

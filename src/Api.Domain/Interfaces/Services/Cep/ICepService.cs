@@ -1,16 +1,18 @@
 using Api.Domain.Dtos.Cep;
-using Api.Domain.Dtos.Metadata;
+using Api.Domain.Entities;
 
 namespace Api.Domain.Interfaces.Services.Cep
 {
-    public interface ICepService
+    public interface ICepService : IBaseAppService<
+        CepEntity,
+        CepDto,
+        CepDtoCreate,
+        CepDtoUpdate,
+        Guid,
+        CepDto,
+        object>
     {
-        Task<CepDto> Get(Guid id);
-        Task<CepDto> Get(string cep);
-        Task<MetadataDto> GetMetadata();
+        Task<CepDto> GetByCep(string cep);
         Task<CepDtoVisualizacao> GetVisualizacao(string cep);
-        Task<CepDtoCreateResult> Post(CepDtoCreate cep);
-        Task<CepDtoUpdateResult> Put(CepDtoUpdate cep);
-        Task<bool> Delete(Guid id);
     }
 }

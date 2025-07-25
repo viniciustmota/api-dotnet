@@ -3,7 +3,6 @@ using System.Reflection;
 using Api.Data.Context;
 using Api.Domain.Dtos;
 using Api.Domain.Dtos.Field;
-using Api.Domain.Dtos.Metadata;
 using Api.Domain.Dtos.Municipio;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Services.Field;
@@ -17,36 +16,35 @@ using System.Linq.Dynamic.Core;
 
 namespace Api.Service.Services
 {
-    public class MunicipioService : IMunicipioService
+    public class MunicipioService : BaseService<
+    MunicipioEntity,
+    MunicipioDto,
+    MunicipioDtoCreate,
+    MunicipioDtoUpdate,
+    Guid,
+    MunicipioDtoCompleto>,
+    IMunicipioService
     {
         private readonly MyContext _context;
         private IMunicipioRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUfService _ufService;
-        private readonly IMetadataService _metadataService;
-        private readonly IServiceProvider _serviceProvider;
 
-        public MunicipioService(IMunicipioRepository repository, IMapper mapper, IUfService ufService, MyContext context, IMetadataService metadataService, IServiceProvider serviceProvider)
+        public MunicipioService(
+            IMunicipioRepository repository,
+            IMapper mapper,
+            IUfService ufService,
+            MyContext context,
+            IMetadataService metadataService,
+            IServiceProvider serviceProvider
+        ) : base(repository, mapper, metadataService, serviceProvider)
         {
             _repository = repository;
             _mapper = mapper;
             _ufService = ufService;
             _context = context;
-            _metadataService = metadataService;
-            _serviceProvider = serviceProvider;
         }
 
-        public async Task<MunicipioDto> Get(Guid id)
-        {
-            var entity = await _repository.SelectAsync(id);
-            return _mapper.Map<MunicipioDto>(entity);
-        }
-
-        public async Task<MunicipioDtoCompleto> GetCompleteById(Guid id)
-        {
-            var entity = await _repository.GetCompleteById(id);
-            return _mapper.Map<MunicipioDtoCompleto>(entity);
-        }
 
         public async Task<MunicipioDtoCompleto> GetCompleteByIBGE(int codIBGE)
         {
@@ -54,7 +52,7 @@ namespace Api.Service.Services
             return _mapper.Map<MunicipioDtoCompleto>(entity);
         }
 
-        public async Task<PagedResultDto<MunicipioDto>> GetAll(
+        public override async Task<PagedResultDto<MunicipioDto>> GetAll(
             int page, 
             int pageSize, 
             string? search = null, 
@@ -113,48 +111,7 @@ namespace Api.Service.Services
                 PageSize = pageSize,
                 Total = total
             };
-        }
-
-
-        public async Task<PagedResultDto<MunicipioDto>> GetAll(string? search)
-        {
-            return await GetAll(1, int.MaxValue, search);
-        }
-
-
-
-        public async Task<MunicipioDtoCreateResult> Post(MunicipioDtoCreate municipio)
-        {
-            var model = _mapper.Map<MunicipioModel>(municipio);
-            var entity = _mapper.Map<MunicipioEntity>(model);
-            var result = await _repository.InsertAsync(entity);
-
-            return _mapper.Map<MunicipioDtoCreateResult>(result);
-        }
-
-        public async Task<MunicipioDtoUpdateResult> Put(MunicipioDtoUpdate municipio)
-        {
-            var model = _mapper.Map<MunicipioModel>(municipio);
-            var entity = _mapper.Map<MunicipioEntity>(model);
-            var result = await _repository.UpdateAsync(entity);
-
-            return _mapper.Map<MunicipioDtoUpdateResult>(result);
-        }
-
-        public async Task<bool> Delete(Guid id)
-        {
-            return await _repository.DeleteAsync(id);
-        }
-
-        public async Task<int> DeleteBatch(List<Guid> ids)
-        {
-            var entities = await _context.Municipios
-                .Where(m => ids.Contains(m.Id))
-                .ToListAsync();
-
-            _context.Municipios.RemoveRange(entities);
-            return await _context.SaveChangesAsync();
-        }
+        }     
 
         public static List<FieldDto> preencherMetadata<T>()
         {
@@ -186,21 +143,6 @@ namespace Api.Service.Services
             if (type == typeof(bool)) return "boolean";
             if (type == typeof(DateTime)) return "date";
             return "object";
-        }
-
-        public async Task<MetadataDto> GetMetadata()
-        {
-           
-
-            var metadata = new MetadataDto
-            {
-                Version = 1,
-                Title = "Municípios",
-                KeepFilters = false,
-                Fields = await _metadataService.GenerateMetadata<MunicipioDto>(_serviceProvider)
-            };
-
-            return metadata;
         }
     }
 }

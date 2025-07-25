@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data.Implementations
 {
-    public class MunicipioImplementation : BaseRepository<MunicipioEntity>, IMunicipioRepository
+    public class MunicipioImplementation : BaseRepository<MunicipioEntity, Guid>, IMunicipioRepository
     {
         private DbSet<MunicipioEntity> _dataset;
 
@@ -32,9 +32,9 @@ namespace Api.Data.Implementations
                                     .FirstOrDefaultAsync(m => m.Id.Equals(id));
         }
 
-        public IQueryable<MunicipioEntity> GetQueryable()
+        IQueryable<MunicipioEntity> IMunicipioRepository.GetQueryable()
         {
-            return _dataset.Include(m => m.Uf).AsNoTracking();
+            return  _dataset.Include(m => m.Uf).AsNoTracking();
         }
     }
 }

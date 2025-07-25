@@ -13,12 +13,14 @@ namespace Api.CrossCutting.DependencyInjection
     {
         public static void ConfigureDependenciesRepository(IServiceCollection serviceCollection, string connectionString)
         {
-            serviceCollection.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-            serviceCollection.AddScoped<IUserRepository, UserImplementation>();
+            serviceCollection.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
 
+            serviceCollection.AddScoped<IUserRepository, UserImplementation>();
             serviceCollection.AddScoped<IUfRepository, UfImplementation>();
             serviceCollection.AddScoped<IMunicipioRepository, MunicipioImplementation>();
             serviceCollection.AddScoped<ICepRepository, CepImplementation>();
+            serviceCollection.AddScoped<IVeiculoRepository, VeiculoImplementation>();
+
 
 
             var configuration = new ConfigurationBuilder();            

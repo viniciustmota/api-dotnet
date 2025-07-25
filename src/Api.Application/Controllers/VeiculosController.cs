@@ -1,16 +1,13 @@
-using System.Net;
 using Api.Domain.Dtos.User;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Service.User;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : BaseController<
+    public class VeiculosController : BaseController<
         IUserService,
         UserEntity,
         UserDto,
@@ -20,7 +17,7 @@ namespace Api.Application.Controllers
         UserDto,
         object>
     {
-        public UsersController(IUserService service) : base(service)
+        public  VeiculosController(IUserService service) : base(service)
         {
         }
     }

@@ -10,7 +10,7 @@ namespace Api.Domain.Interfaces.Services.Veiculo
         VeiculoDtoCreate,
         VeiculoDtoUpdate,
         Guid,
-        CepDto,
+        VeiculoDto,
         object>
     {}
 }

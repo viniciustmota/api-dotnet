@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Api.Domain.Atributes;
 using Api.Domain.Dtos.Field;
 using Api.Domain.Dtos.Municipio;
 using Api.Domain.Interfaces.Services.Field;
@@ -37,7 +38,7 @@ namespace Api.Service.Services
 
                 var field = new FieldDto
                 {
-                    Property = jsonAttr.Name,
+                    Property = jsonAttr != null ? jsonAttr.Name : prop.Name,
                     Label = displayAttr?.Name ?? prop.Name,
                     Type = MapType(prop.PropertyType, prop),
                     Required = requiredAttr != null,

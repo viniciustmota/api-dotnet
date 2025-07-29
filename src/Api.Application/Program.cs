@@ -2,6 +2,7 @@ using Api.CrossCutting.DependencyInjection;
 using Api.CrossCutting.Mappings;
 using Api.Data.Context;
 using Api.Domain.Interfaces.Services.Field;
+using Api.Domain.Interfaces.Services.Veiculo;
 using Api.Domain.Security;
 using Api.Service.Services;
 using AutoMapper;
@@ -64,7 +65,6 @@ if (string.IsNullOrEmpty(finalConnectionString))
 builder.Services.AddScoped<IMetadataService, MetadataService>();
 
 builder.Services.AddDbContext<MyContext>(dbContextOptionsAction);
-
 
 var signingConfigurations = new SigningConfigurations();
 builder.Services.AddSingleton(signingConfigurations);

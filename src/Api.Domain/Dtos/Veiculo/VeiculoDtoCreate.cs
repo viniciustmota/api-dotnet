@@ -4,6 +4,7 @@ namespace Api.Domain.Dtos.Veiculo
 {
     public class VeiculoDtoCreate
     {
+
         [Required(ErrorMessage = "Placa é campo obrigatório")]
         public string Placa { get; set; }
 
@@ -16,7 +17,7 @@ namespace Api.Domain.Dtos.Veiculo
         public string Marca { get; set; }
 
         [Required(ErrorMessage = "Ano é campo obrigatório.")]
-        [StringLength(4, ErrorMessage = "Ano deve ter no máximo {1} caracteres.")]
+        [Range(1886, 2100, ErrorMessage = "Ano deve estar entre {1} e {2}")]
         public int Ano { get; set; }
         
         [Required(ErrorMessage = "Cor é campo obrigatório.")]

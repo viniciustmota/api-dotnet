@@ -5,6 +5,7 @@ using Api.Domain.Interfaces.Services.User;
 using Api.Service.Services;
 using Api.Domain.Interfaces.Service.User;
 using Microsoft.Extensions.DependencyInjection;
+using Api.Domain.Interfaces.Services.Veiculo;
 
 namespace Api.CrossCutting.DependencyInjection
 {
@@ -18,7 +19,7 @@ namespace Api.CrossCutting.DependencyInjection
             serviceCollection.AddTransient<IUfService, UfService>();
             serviceCollection.AddTransient<IMunicipioService, MunicipioService>();
             serviceCollection.AddTransient<ICepService, CepService>();
-
+            serviceCollection.AddTransient<IVeiculoService, VeiculoService>();
         }
     }
 }

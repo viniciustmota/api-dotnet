@@ -82,7 +82,7 @@ namespace Api.Application.Controllers
             return CreatedAtAction(nameof(Get), new { id = ((dynamic)result).Id }, result);
         }
 
-        [HttpPut]
+        [HttpPut()]
         public virtual async Task<IActionResult> Put([FromBody] TDtoUpdate dto)
         {
             if (!ModelState.IsValid)
@@ -103,10 +103,12 @@ namespace Api.Application.Controllers
         }
 
         [HttpDelete]
-        public virtual async Task<IActionResult> DeleteBatch([FromBody] List<TId> ids)
+        public virtual async Task<IActionResult> DeleteBatch([FromBody] List<DeleteDto> items)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var ids = items.Select(v => v.Id).ToList();
 
             var deleted = await _service.DeleteBatch(ids);
             return Ok(new { deletedCount = deleted });

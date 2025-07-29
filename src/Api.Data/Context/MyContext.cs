@@ -9,6 +9,8 @@ namespace Api.Data.Context
     {
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<MunicipioEntity> Municipios { get; set; }
+        public DbSet<VeiculoEntity> Veiculos { get; set; }
+
 
         //é a forma do seu DbContext receber as configurações do 
         // Entity Framework Core de forma externa, através do
@@ -25,6 +27,8 @@ namespace Api.Data.Context
             modelBuilder.Entity<UfEntity>(new UfMap().Configure);
             modelBuilder.Entity<MunicipioEntity>(new MunicipioMap().Configure);
             modelBuilder.Entity<CepEntity>(new CepMap().Configure);
+            modelBuilder.Entity<VeiculoEntity>(new VeiculoMap().Configure);
+
 
             modelBuilder.Entity<UserEntity>().HasData(
                 new UserEntity

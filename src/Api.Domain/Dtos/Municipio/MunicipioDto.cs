@@ -1,34 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Api.Domain.Atributes;
 
 namespace Api.Domain.Dtos.Municipio;
-
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-public class VisibleAttribute : Attribute
-{
-    public bool Visible { get; set; } = false;
-
-    public VisibleAttribute(bool visible)
-    {
-        Visible = visible;
-    }
-}
-
-[AttributeUsage(AttributeTargets.Property)]
-public class ComboAttribute : Attribute
-{
-    public ComboAttribute() { }
-}
-
-[AttributeUsage(AttributeTargets.Property)]
-public class OptionsAttribute : Attribute
-{
-    public string Source { get; }
-    public OptionsAttribute(string source)
-    {
-        Source = source;
-    }
-}
 
 public class MunicipioDto
 {

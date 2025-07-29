@@ -27,6 +27,11 @@ namespace Api.CrossCutting.Mappings
             CreateMap<CepModel, CepEntity>()
                 .ReverseMap();
             #endregion
+
+            #region Veiculo
+            CreateMap<VeiculoModel, VeiculoEntity>()
+                .ReverseMap();
+            #endregion
         }
     }
 }

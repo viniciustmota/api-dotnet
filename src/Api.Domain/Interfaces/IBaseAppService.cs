@@ -18,6 +18,6 @@ namespace Api.Domain.Interfaces.Services
         Task<TDto> Post(TDtoCreate dtoCreate);
         Task<TDto> Put(TDtoUpdate dtoUpdate);
         Task<bool> Delete(TId id);
-        Task<int> DeleteBatch(List<TId> ids);     
+        Task<int> DeleteBatch(List<Guid> ids);     
     }
 }

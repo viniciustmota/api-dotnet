@@ -1,6 +1,8 @@
 using Api.Domain.Dtos.User;
+using Api.Domain.Dtos.Veiculo;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Service.User;
+using Api.Domain.Interfaces.Services.Veiculo;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Application.Controllers
@@ -8,16 +10,16 @@ namespace Api.Application.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class VeiculosController : BaseController<
-        IUserService,
-        UserEntity,
-        UserDto,
-        UserDtoCreate,
-        UserDtoUpdate,
+        IVeiculoService,
+        VeiculoEntity,
+        VeiculoDto,
+        VeiculoDtoCreate,
+        VeiculoDtoUpdate,
         Guid,
-        UserDto,
+        VeiculoDto,
         object>
     {
-        public  VeiculosController(IUserService service) : base(service)
+        public  VeiculosController(IVeiculoService service) : base(service)
         {
         }
     }

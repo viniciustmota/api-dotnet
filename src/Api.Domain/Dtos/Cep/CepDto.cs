@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Api.Domain.Atributes;
 using Api.Domain.Dtos.Municipio;
 
 namespace Api.Domain.Dtos.Cep

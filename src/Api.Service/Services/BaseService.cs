@@ -124,12 +124,12 @@ namespace Api.Service.Services
             return await _repository.DeleteAsync(id);
         }
 
-        public virtual async Task<int> DeleteBatch(List<TId> ids)
+        public virtual async Task<int> DeleteBatch(List<Guid> ids)
         {
             int deletedCount = 0;
             foreach (var id in ids)
             {
-                var deleted = await Delete(id);
+                var deleted = await _repository.DeleteAsync((TId)(object)id);
                 if (deleted)
                     deletedCount++;
             }

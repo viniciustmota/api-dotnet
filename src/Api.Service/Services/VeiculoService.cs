@@ -19,9 +19,11 @@ namespace Api.Service.Services
         VeiculoDtoCreate,
         VeiculoDtoUpdate,
         Guid,
-        VeiculoDto>
+        VeiculoDto>,
+        IVeiculoService
     {
-        public VeiculoService(IRepository<VeiculoEntity, Guid> repository, IMapper mapper, IMetadataService metadataService, IServiceProvider serviceProvider) : base(repository, mapper, metadataService, serviceProvider)
+        public VeiculoService(IRepository<VeiculoEntity, Guid> repository, IMapper mapper, IMetadataService metadataService, IServiceProvider serviceProvider)
+            : base(repository, mapper, metadataService, serviceProvider)
         {
         }
     }

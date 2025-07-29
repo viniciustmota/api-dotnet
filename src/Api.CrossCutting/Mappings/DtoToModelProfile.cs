@@ -2,6 +2,7 @@ using Api.Domain.Dtos.Cep;
 using Api.Domain.Dtos.Municipio;
 using Api.Domain.Dtos.Uf;
 using Api.Domain.Dtos.User;
+using Api.Domain.Dtos.Veiculo;
 using Api.Domain.Models;
 using AutoMapper;
 
@@ -40,6 +41,15 @@ namespace Api.CrossCutting.Mappings
             CreateMap<CepModel, CepDtoCreate>()
                 .ReverseMap();
             CreateMap<CepModel, CepDtoUpdate>()
+                .ReverseMap();
+            #endregion
+            
+            #region VEICULO
+            CreateMap<VeiculoModel, VeiculoDto>()
+                .ReverseMap();
+            CreateMap<VeiculoModel, VeiculoDtoCreate>()
+                .ReverseMap();
+            CreateMap<VeiculoModel, VeiculoDtoUpdate>()
                 .ReverseMap();   
             #endregion
         }

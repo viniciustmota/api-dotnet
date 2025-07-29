@@ -21,7 +21,7 @@ namespace Api.Service.Services
         private readonly IMapper _mapper;
 
         public CepService(ICepRepository repository, IMapper mapper, IMetadataService metadataService, IServiceProvider serviceProvider)
-            : base(repository, mapper, metadataService, serviceProvider)  // passe repository aqui
+            : base(repository, mapper, metadataService, serviceProvider)
         {
             _repository = repository;
             _mapper = mapper;

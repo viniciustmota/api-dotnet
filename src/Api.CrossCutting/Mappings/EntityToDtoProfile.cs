@@ -2,6 +2,7 @@ using Api.Domain.Dtos.Cep;
 using Api.Domain.Dtos.Municipio;
 using Api.Domain.Dtos.Uf;
 using Api.Domain.Dtos.User;
+using Api.Domain.Dtos.Veiculo;
 using Api.Domain.Entities;
 using AutoMapper;
 
@@ -19,6 +20,12 @@ namespace Api.CrossCutting.Mappings
                 .ReverseMap();
 
             CreateMap<UserDtoUpdateResult, UserEntity>()
+                .ReverseMap();
+            
+            CreateMap<UserDtoCreate, UserEntity>()
+                .ReverseMap();
+                
+            CreateMap<UserDtoUpdate, UserEntity>()
                 .ReverseMap();
             #endregion
 
@@ -39,6 +46,12 @@ namespace Api.CrossCutting.Mappings
 
             CreateMap<MunicipioDtoUpdateResult, MunicipioEntity>()
                 .ReverseMap();
+
+            CreateMap<MunicipioDtoCreate, MunicipioEntity>()
+                .ReverseMap();
+
+            CreateMap<MunicipioDtoUpdate, MunicipioEntity>()
+                .ReverseMap();
             #endregion
 
             #region CEP
@@ -50,7 +63,21 @@ namespace Api.CrossCutting.Mappings
 
             CreateMap<CepDtoUpdateResult, CepEntity>()
                 .ReverseMap();
-            #endregion    
+
+            CreateMap<CepDtoCreate, CepEntity>()
+                .ReverseMap();
+                
+            CreateMap<CepDtoUpdate, CepEntity>()
+                .ReverseMap();
+            #endregion
+
+            #region Veiculo
+            CreateMap<VeiculoDtoCreate, VeiculoEntity>();
+            CreateMap<VeiculoDtoUpdate, VeiculoEntity>();
+            CreateMap<VeiculoDto, VeiculoEntity>().ReverseMap();
+            CreateMap<VeiculoDtoCreateResult, VeiculoEntity>().ReverseMap();
+            CreateMap<VeiculoDtoUpdateResult, VeiculoEntity>().ReverseMap();
+            #endregion
         }
     }
 }
